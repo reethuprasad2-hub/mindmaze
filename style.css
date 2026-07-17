@@ -574,3 +574,16 @@ background-position:center;
     box-shadow:0 0 20px rgba(94,234,212,.25);
     color:white;
 }
+@media (max-width: 768px) {
+    .panel {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}

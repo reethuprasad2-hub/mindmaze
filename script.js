@@ -11,7 +11,7 @@
   /* ------------------------------------------------------------------ */
   /*  Config                                                             */
   /* ------------------------------------------------------------------ */
-  const TOTAL_TIME = 5*60;      // seconds on the master countdown
+  const TOTAL_TIME = 15*60;      // seconds on the master countdown
   const ROOM_BASE_SCORE = 100;
   const HINT_PENALTY = 15;
   const WRONG_PENALTY = 5;

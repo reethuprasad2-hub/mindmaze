@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindMaze — Escape the AI Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Scanline overlay, purely decorative -->
+<div class="scanline" aria-hidden="true"></div>
+
+<div class="app">
+
+  <!-- ============ HEADER ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◈</span>
+      <div class="brand-text">
+        <h1>MindMaze</h1>
+        <p>Escape the AI Lab — Containment Protocol</p>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-stat" id="stat-timer" title="Time remaining">
+        <span class="hud-label">Time</span>
+        <span class="hud-value" id="timerValue">15:00</span>
+      </div>
+      <div class="hud-stat" id="stat-score" title="Current score">
+        <span class="hud-label">Score</span>
+        <span class="hud-value" id="scoreValue">0</span>
+      </div>
+      <div class="hud-stat" id="stat-best" title="Best score on this device">
+        <span class="hud-label">Best</span>
+        <span class="hud-value" id="bestValue">0</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark / light mode">
+        <span id="themeIcon">☾</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ PROGRESS RING (segments) ============ -->
+  <nav class="progress-track" id="progressTrack" aria-label="Room progress">
+    <!-- filled by JS: 5 segments -->
+  </nav>
+
+  <!-- ============ MAIN STAGE ============ -->
+  <main class="stage">
+
+    <!-- Intro screen -->
+    <section class="panel intro-panel" id="screen-intro">
+      <div class="panel-inner">
+        <span class="eyebrow">CLASSIFIED MISSION • LEVEL 5 CLEARANCE</span>
+
+<h2 class="display-title">
+ESCAPE THE AI LAB
+</h2>
+
+<p class="lede">
+
+The world's most advanced Artificial Intelligence has gone rogue.
+
+It has locked down the entire research facility and trapped every scientist inside.
+
+Five encrypted security chambers protect the Emergency Shutdown System.
+
+Your mission is simple.
+
+<strong>Collect all AI Core Fragments.</strong><br>
+<strong>Disable the Rogue AI.</strong><br>
+<strong>Escape before the countdown reaches zero.</strong>
+
+</p>
+
+<div class="mission-box">
+
+<h3>MISSION OBJECTIVES</h3>
+
+<ul>
+<li>✔ Solve 5 Security Chambers</li>
+<li>✔ Collect AI Core Fragments</li>
+<li>✔ Disable the AI Core</li>
+<li>✔ Escape Within 15 Minutes</li>
+</ul>
+
+</div>
+        <div class="intro-actions">
+          <button class="btn btn-primary" id="btnStart">🚀 START MISSION</button>
+          <button class="btn btn-ghost" id="btnResume" hidden>Resume Session</button>
+        </div>
+       <div class="intro-links">
+    <a href="about -project.html" class="terminal-link">
+        ← Open Mission Documentation
+    </a>
+</div>
+        <p class="fine-print">Your best time and score are saved on this device.</p>
+      </div>
+    </section>
+
+    <!-- Room screen (template content swapped by JS) -->
+    <section class="panel room-panel" id="screen-room" hidden>
+      <div class="panel-inner">
+        <div class="room-head">
+          <span class="eyebrow" id="roomEyebrow">Room 1 / 5</span>
+          <h2 class="display-title" id="roomTitle">Access Control</h2>
+          <p class="lede" id="roomLede">Decode the block.</p>
+        </div>
+
+        <div class="room-body" id="roomBody">
+          <!-- puzzle-specific markup injected here -->
+        </div>
+
+        <div class="room-footer">
+          <div class="feedback" id="roomFeedback" role="status" aria-live="polite"></div>
+          <div class="room-actions">
+            <button class="btn btn-ghost" id="btnHint">Use Hint (−15 pts)</button>
+            <button class="btn btn-primary" id="btnSubmit">Submit</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Room cleared transition -->
+    <section class="panel clear-panel" id="screen-clear" hidden>
+      <div class="panel-inner">
+        <span class="eyebrow">Subsystem Breached</span>
+        <h2 class="display-title" id="clearTitle">Room Secured</h2>
+        <p class="lede" id="clearBody">Core fragment extracted.</p>
+        <div class="fragment-badge" id="fragmentBadge">Fragment: —</div>
+        <button class="btn btn-primary" id="btnNextRoom">Continue</button>
+      </div>
+    </section>
+
+    <!-- Win screen -->
+    <section class="panel end-panel" id="screen-win" hidden>
+      <div class="panel-inner">
+        <span class="eyebrow">Protocol Complete</span>
+        <h2 class="display-title">MISSION COMPLETE
+
+🎉 MISSION COMPLETE
+
+Containment AI Disabled
+
+Emergency Exit Unlocked
+
+You Successfully Escaped The AI Lab</h2>
+        <p class="lede" id="winSummary"></p>
+        <div class="end-stats" id="winStats"></div>
+        <div class="intro-actions">
+          <button class="btn btn-primary" id="btnPlayAgain">Play Again</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lose screen -->
+    <section class="panel end-panel" id="screen-lose" hidden>
+      <div class="panel-inner">
+        <span class="eyebrow">Time Expired</span>
+        <h2 class="display-title">🚨 CONTAINMENT FAILURE
+
+Emergency Lockdown Activated
+
+AI Security Has Taken Control
+
+Mission Failed</h2>
+        <p class="lede" id="loseSummary"></p>
+        <div class="intro-actions">
+          <button class="btn btn-primary" id="btnRetry">Try Again</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>MindMaze · a vanilla HTML/CSS/JS escape room</span>
+  </footer>
+</div>
+
+<!-- Toast for hint text -->
+<div class="hint-toast" id="hintToast" hidden></div>
+<audio id="bgMusic" loop>
+    <source src="audiobg.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="winSound">
+    <source src="win.wav" type="audio/mpeg">
+</audio>
+
+<audio id="loseSound">
+    <source src="lose.wav" type="audio/mpeg">
+</audio>
+<script src="script.js"></script>
+</body>
+</html>
